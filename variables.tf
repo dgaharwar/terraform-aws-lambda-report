@@ -1,7 +1,3 @@
-variable "region" {}
-variable "access_key" {}
-variable "secret_key" {}
-
 variable "create" {
   description = "Controls whether resources should be created"
   type        = bool
@@ -675,13 +671,13 @@ variable "recreate_missing_package" {
   default     = true
 }
 
-variable "AWS_ACCESS_KEY_ID" {
+variable "access_key" {
   description = "AWS Access Key ID"
   type        = string
   default     = ""
 }
 
-variable "AWS_SECRET_ACCESS_KEY" {
+variable "secret_key" {
   description = "AWS Secret Access Key"
   type        = string
   default     = ""
@@ -690,5 +686,5 @@ variable "AWS_SECRET_ACCESS_KEY" {
 variable "region" {
   description = "The AWS region to create resources in"
   type        = string
-  default     = "ap-northeast-1"
+  default     = ""
 }

@@ -1,5 +1,5 @@
 locals {
-  create_role = local.create && var.create_function && var.create_layer && var.create_role
+  create_role = local.create && var.create_function && !var.create_layer && var.create_role
 
   # Lambda@Edge uses the Cloudwatch region closest to the location where the function is executed
   # The region part of the LogGroup ARN is then replaced with a wildcard (*) so Lambda@Edge is able to log in every region
@@ -20,12 +20,12 @@ locals {
   )))
 
   trusted_entities_principals = [
-    for principal in var.trusted_entities : {
-      type        = principal.type
-      identifiers = tolist(principal.identifiers)
-    }
-    if can(tostring(principal))
-  ]
+  for principal in var.trusted_entities : {
+    type = principal != null ? principal.type : null // Check if principal is not null
+    identifiers = principal != null && principal.identifiers != null ? tolist(principal.identifiers) : [] // Check if identifiers is not null
+  }
+  if principal != null && can(tostring(principal)) // Ensure principal is not null before calling can()
+ ]
 }
 
 ###########
@@ -120,7 +120,7 @@ data "aws_iam_policy_document" "logs" {
     effect = "Allow"
 
     actions = compact([
-      var.use_existing_cloudwatch_log_group ? "logs:CreateLogGroup" : "",
+      !var.use_existing_cloudwatch_log_group ? "logs:CreateLogGroup" : "",
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ])

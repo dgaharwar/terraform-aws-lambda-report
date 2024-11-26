@@ -24,7 +24,7 @@ locals {
       type        = principal.type
       identifiers = tolist(principal.identifiers)
     }
-    if !can(tostring(principal))
+#    if !can(tostring(principal))
   ]
 }
 
